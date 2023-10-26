@@ -28,6 +28,9 @@ class Position(Base):
     requirements = Column(Text, nullable=False)
     responsibilities = Column(Text, nullable=False)
 
+    def get_info(self):
+        return [self.title, self.description, self.salary, self.requirements, self.responsibilities]
+
 class Employee(Base):
     __tablename__ = 'Employee'
 
@@ -41,6 +44,10 @@ class Employee(Base):
     address = Column(Text, nullable=False)
 
     rl_position = relationship(Position, backref='employees')
+
+    def get_info(self):
+        return [self.id, self.fio, self.position_title, self.birth_date, self.passport_data,
+                self.contact_phone, self.email, self.address]
 
 
 class Salary_payment(Base):
@@ -56,6 +63,10 @@ class Salary_payment(Base):
 
     rl_employee = relationship(Employee, backref='payments')
 
+    def get_info(self):
+        return [self.id, self.employee_id, self.year, self.payment_size, self.sales,
+                self.bonus, self.rating]
+
     
 class Company_Results(Base):
     __tablename__ = 'Company Results'
@@ -65,7 +76,10 @@ class Company_Results(Base):
     revenue = Column(Float, nullable=False)
     market_share = Column(Float, nullable=False)
     number_of_customers = Column(Integer, nullable=False)
-    
+
+    def get_info(self):
+        return [self.year, self.profit, self.revenue, self.market_share, self.number_of_customers]
+
 class Brand(Base):
     __tablename__ = 'Brand'
     
@@ -74,6 +88,10 @@ class Brand(Base):
     country_of_origin = Column(Text, nullable=False)
     year_established = Column(Date, nullable=False)
     logo = Column(Text, nullable=False)
+
+    def get_info(self):
+        return [self.name, self.manufacturer, self.country_of_origin,
+                self.year_established, self.logo]
 
 class Car(Base):
     __tablename__ = 'Car'
@@ -89,6 +107,10 @@ class Car(Base):
 
     rl_brand = relationship(Brand, backref='cars')
 
+    def get_info(self):
+        return [self.id, self.brand, self.model, self.complectation, self.fuel, self.year,
+                self.price, self.color]
+
 
 class Sales(Base):
     __tablename__ = 'Sales'
@@ -103,6 +125,10 @@ class Sales(Base):
 
     car = relationship(Car, backref='sales')
     employee = relationship(Employee, backref='sales')
+
+    def get_info(self):
+        return [self.transaction_id, self.car_id, self.employee_id, self.amount, self.date,
+                self.status, self.comment]
 
 
 
