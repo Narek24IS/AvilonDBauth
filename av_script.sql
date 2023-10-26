@@ -1,3 +1,4 @@
+# drop table  Position, Brand, Car, `Company Results`, Employee, `Salary payment`, Sales
 -- Создание таблицы "Должность"
 CREATE TABLE `Position`
 (
@@ -29,7 +30,7 @@ CREATE TABLE `Salary payment`
 (
     `ID`           INT(11)        NOT NULL AUTO_INCREMENT,
     `Employee ID`  INT(11)        NOT NULL,
-    `Year`         YEAR           NOT NULL,
+    `Date`         DATE           NOT NULL,
     `Payment size` DECIMAL(10, 2) NOT NULL,
     `Sales`        DECIMAL(10, 2) NOT NULL,
     `Bonus`        DECIMAL(10, 2) NOT NULL,
@@ -49,6 +50,17 @@ CREATE TABLE `Company Results`
     PRIMARY KEY (`Year`)
 );
 
+-- Создание таблицы "Марка"
+CREATE TABLE `Brand`
+(
+    `Name`              VARCHAR(255) NOT NULL,
+    `Manufacturer`      VARCHAR(255) NOT NULL,
+    `Country of Origin` VARCHAR(255) NOT NULL,
+    `Year Established`  YEAR         NOT NULL,
+    `Logo`              VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`Name`)
+);
+
 -- Создание таблицы "Машина"
 CREATE TABLE `Car`
 (
@@ -60,22 +72,8 @@ CREATE TABLE `Car`
     `Year`          YEAR           NOT NULL,
     `Price`         DECIMAL(10, 2) NOT NULL,
     `Color`         VARCHAR(255)   NOT NULL,
-    PRIMARY KEY (`ID`)
-);
-
--- Создание таблицы "Марка"
-CREATE TABLE `Brand`
-(
-    `Name`              VARCHAR(255) NOT NULL,
-    `Manufacturer`      VARCHAR(255) NOT NULL,
-    `Country of Origin` VARCHAR(255) NOT NULL,
-    `Name`              VARCHAR(255) NOT NULL,
-    `Manufacturer`      VARCHAR(255) NOT NULL,
-    `Country of Origin` VARCHAR(255) NOT NULL,
-    `Country of Origin` VARCHAR(255) NOT NULL,
-    `Year Established`  YEAR         NOT NULL,
-    `Logo`              VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`Name`)
+    PRIMARY KEY (`ID`),
+    FOREIGN KEY (Brand) REFERENCES Brand(Name)
 );
 
 -- Создание таблицы "Продажи"
@@ -119,13 +117,13 @@ VALUES ('Иванов Иван Иванович', 'Продавец-консул
         'morozova@example.com', 'г. Ростов-на-Дону, ул. Горького, д. 6');
 
 -- Заполнение таблицы "Выплата зарплаты" данными
-INSERT INTO `Salary payment` (`Employee ID`, `Year`, `Payment size`, `Sales`, `Bonus`, `Rating`)
-VALUES (1, 2022, 40000.00, 700000.00, 7000.00, 3),
-       (2, 2022, 45000.00, 600000.00, 6000.00, 2),
-       (3, 2022, 55000.00, 900000.00, 9000.00, 4),
-       (4, 2022, 50000.00, 750000.00, 7500.00, 3),
-       (5, 2022, 55000.00, 900000.00, 9000.00, 4),
-       (6, 2022, 50000.00, 750000.00, 7500.00, 3);
+INSERT INTO `Salary payment` (`Employee ID`, `Date`, `Payment size`, `Sales`, `Bonus`, `Rating`)
+VALUES (1, '2022-03-03', 40000.00, 700000.00, 7000.00, 3),
+       (2, '2022-03-03', 45000.00, 600000.00, 6000.00, 2),
+       (3, '2022-03-03', 55000.00, 900000.00, 9000.00, 4),
+       (4, '2022-03-03', 50000.00, 750000.00, 7500.00, 3),
+       (5, '2022-03-03', 55000.00, 900000.00, 9000.00, 4),
+       (6, '2022-03-03', 50000.00, 750000.00, 7500.00, 3);
 
 -- Заполнение таблицы "Итоги компании" данными
 INSERT INTO `Company Results` (`Year`, `Profit`, `Revenue`, `Market Share`, `Number of Customers`)
