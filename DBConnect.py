@@ -40,6 +40,6 @@ class DBConnect:
 
 if __name__ == '__main__':
     db = DBConnect('hikinari', '68ee3e138', 'AvilonN')
-    results = db.get_positions()
+    results = db.get_cars()
 
     print(results[0].get_info())

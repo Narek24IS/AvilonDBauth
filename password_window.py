@@ -1,9 +1,11 @@
 from dataclasses import dataclass
-
+from addit_windows import show_error_message
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QSplitter
 from Admin_window import AdminWindow
 from User2_window import WindowForUser2
+
+
 
 @dataclass
 class User:
@@ -50,7 +52,7 @@ class PasswordWindow(QWidget):
             if username == user.username and password == user.password:
                 self.open_window(user.role)
                 return
-        self.show_error_message('Ошибка авторизации', 'Неверное имя пользователя или пароль')
+        show_error_message('Ошибка авторизации', 'Неверное имя пользователя или пароль')
 
     def open_window(self, role):
         match role:
@@ -65,10 +67,3 @@ class PasswordWindow(QWidget):
             case _:
                 self.show_error_message('Ошибка', 'Неизвестная роль пользователя')
 
-    @classmethod
-    def show_error_message(cls, title, message):
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Icon.Critical)
-        msg_box.setWindowTitle(title)
-        msg_box.setText(message)
-        msg_box.exec()

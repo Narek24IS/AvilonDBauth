@@ -1,34 +1,61 @@
-import sys
-
-from PyQt6.QtWidgets import QWidget, QDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QApplication
-from ORMModels import Car, Brand
-from contextlib import contextmanager
-from sqlalchemy.orm import sessionmaker
-import sqlalchemy as sa
+from PyQt6.QtWidgets import QWidget, QDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QApplication, QPushButton, \
+    QHBoxLayout, QLineEdit, QFrame
 from DBConnect import DBConnect
+from addit_windows import show_error_message
+from env_data import login, password, db_name
+import sys
 
 
 class AdminWindow(QWidget):
     def __init__(self):
         super().__init__()
-        # Создание окна
-        self.new_window = QDialog(self)
-        self.new_window.setWindowTitle('Окно админа')
-        self.new_window.setGeometry(300, 300, 500, 200)
-        # Создание таблицы
-        self.table_widget = QTableWidget()
-        self.layout = QVBoxLayout()
-        self.db = DBConnect('hikinari', '68ee3e138', 'AvilonN')
-
-        self.layout.addWidget(self.table_widget)
-        self.new_window.setLayout(self.layout)
-
+        self.create_content()
         self.new_window.exec()
 
-    def select_cars(self):
+    def create_content(self) -> None:
+        # Окно
+        self.new_window = QDialog(self)
+        self.new_window.setWindowTitle('Окно админа')
+        self.new_window.resize(550, 230)
+
+        # Таблицы
+        self.table_widget = QTableWidget()
+        self.db = DBConnect(login, password, db_name)
+
+        # Кнопка
+        self.get_button = QPushButton('Get')
+        self.get_button.clicked.connect(self.process_request)
+
+        # Поле ввода
+        self.req = QLineEdit()
+
+        # Компоновка кнопки и поля
+        self.frame = QFrame()
+        self.hlayout = QHBoxLayout()
+        self.hlayout.addWidget(self.get_button)
+        self.hlayout.addWidget(self.req)
+        self.frame.setLayout(self.hlayout)
+
+        # Общая компоновка
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.table_widget)
+        self.layout.addWidget(self.frame)
+        self.new_window.setLayout(self.layout)
+
+    def process_request(self) -> None:
+        request = self.req.text()
+
+        match request.lower():
+            case 'car':
+                self.select_cars()
+            case _:
+                show_error_message("Ошибка", "Такой таблицы не существует")
+
+
+
+    def select_cars(self) -> None:
         # Получение результата запроса
         results = [x.get_info() for x in self.db.get_cars()]
-
         # Количество столбцов и строк
         self.table_widget.setRowCount(len(results))
         self.table_widget.setColumnCount(len(results[0])-1)
@@ -45,13 +72,9 @@ class AdminWindow(QWidget):
         self.table_widget.resizeColumnsToContents()
         # self.table_widget.resizeRowsToContents()
         # Изменение размера окна под таблицу
-
-
-        self.table_widget.updateGeometries()
-        print(self.table_widget.sizeHint().width(), self.table_widget.sizeHint().height())
-        # 1 строка - 30 пикселей
-        self.new_window.resize(550, 230)
-        self.new_window.exec()
+        self.new_window.resize(550, 280)
+        # Обновление содержимого окна
+        self.new_window.setLayout(self.layout)
 
 
 if __name__ == '__main__':
