@@ -28,18 +28,32 @@ class DBConnect:
         finally:
             session.close()
 
-    def get_cars(self) -> list[Car]:
+    def get_full_table(self, table_name:str) -> list[Car]:
         with self.__session_scope() as s:
-            result:list[Car] = s.query(Car).all()
-            return result
+            match table_name.lower():
+                case 'brand' | 'brands':
+                    return s.query(Brand).all()
+                case 'car' | 'cars':
+                    return s.query(Car).all()
+                case 'company' | 'result' | 'results' | 'company results' | 'company result':
+                    return s.query(Company_Results).all()
+                case 'employee' | 'employees':
+                    return s.query(Employee).all()
+                case 'position' | 'positions':
+                    return s.query(Position).all()
+                case 'salary' | 'payment' | 'payments' | 'salary payment' | 'salary payments':
+                    return s.query(Salary_payment).all()
+                case 'sale' | 'sales':
+                    return s.query(Sales).all()
+                case _:
+                    return []
 
-    def get_positions(self) -> list[Position]:
+    def test(self):
         with self.__session_scope() as s:
-            result:list[Position] = s.query(Position).all()
-            return result
+            s.query(Sales).all()
 
 if __name__ == '__main__':
     db = DBConnect('hikinari', '68ee3e138', 'AvilonN')
-    results = db.get_cars()
-
+    results = db.get_full_table('sale')
+    # db.test()
     print(results[0].get_info())

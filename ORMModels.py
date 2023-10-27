@@ -3,22 +3,6 @@ from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
 
-# class Image(Base):
-#     __tablename__ = 'Image'
-#
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     name = Column(Text, nullable=False)
-#
-#
-# class Topic(Base):
-#     __tablename__ = 'Topic'
-#
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     title = Column(Text, nullable=False)
-#     image_id = Column(Integer, ForeignKey('Image.id'), nullable=False)
-#
-#     rl_image = relationship(Image, backref='topics')  # innerjoin=True для JOIN
-
 class Position(Base):
     __tablename__ = 'Position'
 
@@ -31,12 +15,16 @@ class Position(Base):
     def get_info(self):
         return [self.title, self.description, self.salary, self.requirements, self.responsibilities]
 
+    @staticmethod
+    def get_headers():
+        return ['Title', 'Description', 'Salary', 'Requirements', 'Responsibilities']
+
 class Employee(Base):
     __tablename__ = 'Employee'
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     fio = Column(Text, nullable=False)
-    position_title = Column(Text, ForeignKey('Position.title'), nullable=False)
+    position = Column(Text, ForeignKey('Position.title'), nullable=False)
     birth_date = Column(Date, nullable=False)
     passport_data = Column(Text, nullable=False)
     contact_phone = Column(Text, nullable=False)
@@ -46,16 +34,21 @@ class Employee(Base):
     rl_position = relationship(Position, backref='employees')
 
     def get_info(self):
-        return [self.id, self.fio, self.position_title, self.birth_date, self.passport_data,
+        return [self.id, self.fio, self.position, self.birth_date, self.passport_data,
                 self.contact_phone, self.email, self.address]
+
+    @staticmethod
+    def get_headers():
+        return ['Id', 'FIO', 'Position', 'Birth date', 'Passport data', 'Contact phone',
+                'Email', 'Address']
 
 
 class Salary_payment(Base):
-    __tablename__ = 'Salary payment'
+    __tablename__ = 'Salary_payment'
     
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     employee_id = Column(Integer, ForeignKey('Employee.id'), nullable=False)
-    year = Column(Date, nullable=False)
+    date = Column(Date, nullable=False)
     payment_size = Column(Float, nullable=False)
     sales = Column(Float, nullable=False)
     bonus = Column(Float, nullable=False)
@@ -64,12 +57,16 @@ class Salary_payment(Base):
     rl_employee = relationship(Employee, backref='payments')
 
     def get_info(self):
-        return [self.id, self.employee_id, self.year, self.payment_size, self.sales,
+        return [self.id, self.employee_id, self.date, self.payment_size, self.sales,
                 self.bonus, self.rating]
+
+    @staticmethod
+    def get_headers():
+        return ['Id', 'Employee ID', 'Date', 'Payment size', 'Sales', 'Bonus', 'Rating']
 
     
 class Company_Results(Base):
-    __tablename__ = 'Company Results'
+    __tablename__ = 'Company_Results'
 
     year = Column(Date, primary_key=True, nullable=False)
     profit = Column(Float, nullable=False)
@@ -79,6 +76,10 @@ class Company_Results(Base):
 
     def get_info(self):
         return [self.year, self.profit, self.revenue, self.market_share, self.number_of_customers]
+
+    @staticmethod
+    def get_headers():
+        return ['Year', 'Profit', 'Revenue', 'Market share', 'Number of customers']
 
 class Brand(Base):
     __tablename__ = 'Brand'
@@ -92,6 +93,11 @@ class Brand(Base):
     def get_info(self):
         return [self.name, self.manufacturer, self.country_of_origin,
                 self.year_established, self.logo]
+
+    @staticmethod
+    def get_headers():
+        return ['Name', 'Manufacturer', 'Country of origin', 'Year established', 'Sales',
+                'Bonus', 'Rating']
 
 class Car(Base):
     __tablename__ = 'Car'
@@ -110,6 +116,10 @@ class Car(Base):
     def get_info(self):
         return [self.id, self.brand, self.model, self.complectation, self.fuel, self.year,
                 self.price, self.color]
+
+    @staticmethod
+    def get_headers():
+        return ['Id', 'Brand', 'Model', 'Complectation', 'Fuel', 'Year', 'Price', 'Color']
 
 
 class Sales(Base):
@@ -130,5 +140,6 @@ class Sales(Base):
         return [self.transaction_id, self.car_id, self.employee_id, self.amount, self.date,
                 self.status, self.comment]
 
-
-
+    @staticmethod
+    def get_headers():
+        return ['Transaction ID', 'Car ID', 'Employee ID', 'Amount', 'Date', 'Status', 'Comment']

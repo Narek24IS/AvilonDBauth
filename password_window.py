@@ -3,7 +3,7 @@ from addit_windows import show_error_message
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QSplitter
 from Admin_window import AdminWindow
-from User2_window import WindowForUser2
+
 
 
 
@@ -60,10 +60,10 @@ class PasswordWindow(QWidget):
                 self.close()
                 window = AdminWindow()
                 window.show()
-            case 'User':
-                self.close()
-                window = WindowForUser2()
-                window.show()
+            # case 'User':
+            #     self.close()
+            #     window = WindowForUser2()
+            #     window.show()
             case _:
-                self.show_error_message('Ошибка', 'Неизвестная роль пользователя')
+                show_error_message('Ошибка', 'Неизвестная роль пользователя')
 

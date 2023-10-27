@@ -1,3 +1,4 @@
+from typing import Union
 from PyQt6.QtWidgets import QWidget, QDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QApplication, QPushButton, \
     QHBoxLayout, QLineEdit, QFrame
 from DBConnect import DBConnect
@@ -47,32 +48,47 @@ class AdminWindow(QWidget):
 
         match request.lower():
             case 'car':
-                self.select_cars()
+                self.select_all(request)
             case _:
                 show_error_message("Ошибка", "Такой таблицы не существует")
 
-
-
-    def select_cars(self) -> None:
+    def select_all(self, table_name:str) -> None:
         # Получение результата запроса
-        results = [x.get_info() for x in self.db.get_cars()]
+        table:list = self.db.get_full_table(table_name.lower())
+        if not table:
+            show_error_message("Ошибка", "Такой таблицы не существует")
+            return
+        results = [x.get_info() for x in table]
+
         # Количество столбцов и строк
-        self.table_widget.setRowCount(len(results))
-        self.table_widget.setColumnCount(len(results[0])-1)
+        row = len(results)
+        col = len(results[0])
+        self.table_widget.setRowCount(row)
+        self.table_widget.setColumnCount(col)
+
         # Заголовок
-        column_headers = ['brand', 'model', 'complectation', 'fuel', 'year',
-                          'price', 'color']
+        column_headers = table[0].get_headers()
         self.table_widget.setHorizontalHeaderLabels(column_headers)
+        self.table_widget.horizontalHeader().setStretchLastSection(True)
+
+        # Изменение размера окна под таблицу
+        height = 90+row*35 # 80 - button, 35 - 1 row
+        str_rows = [(str(cell) for cell in line) for line in results]
+        max_row = sum(max((len(st) for st in col)) for col in zip(*str_rows))+col
+        max_header = len(' '.join((str(x) for x in column_headers)))+col
+        width = max(max_row, max_header)*9+100
+        self.new_window.resize(width, height)
+
         # Заполнение таблицы
         for row, result in enumerate(results):
-            for column, value in enumerate(result[1:]):
+            for column, value in enumerate(result):
                 item = QTableWidgetItem(str(value))
                 self.table_widget.setItem(row, column, item)
+
         # Изменение размеров строк и столбцов
         self.table_widget.resizeColumnsToContents()
         # self.table_widget.resizeRowsToContents()
-        # Изменение размера окна под таблицу
-        self.new_window.resize(550, 280)
+
         # Обновление содержимого окна
         self.new_window.setLayout(self.layout)
 
@@ -80,5 +96,4 @@ class AdminWindow(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main_window = AdminWindow()
-    main_window.select_cars()
     main_window.show()
