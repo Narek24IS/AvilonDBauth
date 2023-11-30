@@ -42,7 +42,7 @@ CREATE TABLE `Salary_payment`
 -- Создание таблицы "Итоги компании"
 CREATE TABLE `Company_Results`
 (
-    `Year`                YEAR           NOT NULL,
+    `Year`                INT           NOT NULL,
     `Profit`              DECIMAL(10, 2) NOT NULL,
     `Revenue`             DECIMAL(10, 2) NOT NULL,
     `Market_Share`        DECIMAL(5, 2)  NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE `Brand`
     `Name`              VARCHAR(255) NOT NULL,
     `Manufacturer`      VARCHAR(255) NOT NULL,
     `Country_of_Origin` VARCHAR(255) NOT NULL,
-    `Year_Established`  YEAR         NOT NULL,
+    `Year_Established`  INT         NOT NULL,
     `Logo`              VARCHAR(255) NOT NULL,
     PRIMARY KEY (`Name`)
 );
@@ -69,7 +69,7 @@ CREATE TABLE `Car`
     `Model`         VARCHAR(255)   NOT NULL,
     `Complectation` VARCHAR(255)   NOT NULL,
     `Fuel`          VARCHAR(255)   NOT NULL,
-    `Year`          YEAR           NOT NULL,
+    `Year`          INT           NOT NULL,
     `Price`         DECIMAL(10, 2) NOT NULL,
     `Color`         VARCHAR(255)   NOT NULL,
     PRIMARY KEY (`ID`),
